@@ -42,6 +42,48 @@
 
 ---
 
+## 📋 実装状況
+
+- **Unity バージョン**
+  - 6000.2.12f1
+
+- **Core（実装済）**
+  - `MonoBehaviourSingleton<T>`: シーン跨ぎのシングルトン基盤（Awake/Start/OnDestroy を置換するフック提供）
+  - `SystemManager`: 60FPS固定、`GameManager`/`AudioManager` の初期化を保証
+  - `EventBus`: `OnGameStateChanged(GameState)`, `OnScoreChanged(int)`, `OnFishGrow`
+  - `GameState`: `Menu / Game / Win / Lose`
+  - `GameManager`:
+    - API: `StartGame() / WinGame() / LoseGame() / GoToMenu() / ResetGame() / RestartGame()`
+    - ステート変更時に `EventBus.OnGameStateChanged` を発火
+  - `ScreenManager`:
+    - 画面Rootの切替: `menuRoot / gameRoot / winRoot / loseRoot` を `GameState` に同期
+    - 設定ポップアップ: `OpenSettings()/CloseSettings()/ToggleSettings()`（ゲーム状態と独立）
+    - 付随UI例: `ReStartButton` は Menu 以外で表示
+  - `AudioManager`:
+    - BGM/SE 再生、`AudioMixer` 連携（`SetBGMVolume01(float)` / `SetSEVolume01(float)`）
+
+- **Scenes / UI**
+  - シーン: `Assets/Template/Scenes/MainScene.unity`（テンプレート配置）
+  - UI: `Assets/Template/UI/Common/`, `Assets/Template/UI/Settings/`（構成ディレクトリあり）
+
+- **使い方（セットアップ）**
+  - シーン上に `SystemManager` を1つ配置（なければ自動生成されます）
+  - `ScreenManager` を UI ルートにアタッチし、以下を割り当て
+    - `menuRoot`, `gameRoot`, `winRoot`, `loseRoot`, `settingsPopup`（任意で `ReStartButton`）
+  - ボタンの OnClick 例
+    - ゲーム開始: `GameManager.Instance.StartGame()`
+    - 勝利: `GameManager.Instance.WinGame()`
+    - 敗北: `GameManager.Instance.LoseGame()`
+    - メニューへ: `GameManager.Instance.GoToMenu()`
+    - 設定表示/非表示: `ScreenManager.Instance.OpenSettings()/CloseSettings()/ToggleSettings()`
+
+- **既知の未実装（今後対応）**
+  - 汎用 UI プレハブの整備（ボタン/パネル/トースト など）
+  - サンプル SE/BGM の配置と初期再生フロー
+  - スコアなどゲーム進行の共通データ層（ScriptableObject）例
+
+---
+
 ## 🕒 Development Plan
 
 テンプレート完成後の開発スケジュール想定です。
