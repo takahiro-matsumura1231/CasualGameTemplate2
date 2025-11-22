@@ -1,29 +1,45 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Template.Core
 {
     public class GameManager : MonoBehaviourSingleton<GameManager>
     {
-        public GameState CurrentState { get; private set; } = GameState.Init;
+        public GameState CurrentState { get; private set; } = GameState.Menu;
 
         protected override void SingletonStarted()
         {
-            SetState(GameState.Init);
+            SetState(GameState.Menu);
         }
 
         public void StartGame()
         {
-            SetState(GameState.Playing);
+            SetState(GameState.Game);
         }
 
-        public void EndGame()
+        public void WinGame()
         {
-            SetState(GameState.GameOver);
+            SetState(GameState.Win);
+        }
+
+        public void LoseGame()
+        {
+            SetState(GameState.Lose);
+        }
+
+        public void GoToMenu()
+        {
+            SetState(GameState.Menu);
         }
 
         public void ResetGame()
         {
-            SetState(GameState.Init);
+            SetState(GameState.Menu);
+        }
+
+        public void RestartGame()
+        {
+            StartGame();
         }
 
         private void SetState(GameState next)

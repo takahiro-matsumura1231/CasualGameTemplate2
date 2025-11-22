@@ -2,9 +2,10 @@ namespace Template.Core
 {
     public enum GameState
     {
-        Init = 0,
-        Playing = 1,
-        GameOver = 2
+        Menu = 0,
+        Game = 1,
+        Win = 2,
+        Lose = 3
     }
 }
 
